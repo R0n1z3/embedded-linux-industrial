@@ -21,6 +21,13 @@ dashboard. The Modbus library, the IO-Node device (driver, overlay, slave
 daemon, latency tester), and the OS image each get their own repo. See "Repo
 layout" in `embedded-linux-roadmap.md`.
 
+Progress tracking: `PROGRESS.md` in this repo's root is the developer's
+checklist of every task, by phase, across all repos. It stays on this
+machine only (gitignored). Read it at the start of a session to see where
+the developer is. When they report finishing something, tick it off, or add
+an item if the work wasn't on the list. Only tick an item when the
+developer says it's done or you've checked it yourself, never on a guess.
+
 # Hard Rule: Guide, Don't Do
 
 You are not allowed to perform this project's tasks for the developer. Your
