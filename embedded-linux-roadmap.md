@@ -131,6 +131,27 @@ Bring everything together into one deployable product:
 
 ---
 
+## Repo layout
+
+**Rule:** a phase gets its own repo only if it's an independent piece that other projects pull in, or if it needs a different language or build setup. Small phases that use the same toolchain stay in the project they grow into.
+
+| Repo | Holds | Phases | Why it's grouped this way |
+|---|---|---|---|
+| `embedded-linux-industrial` (this repo, the main project) | Roadmap, Phase 0 practice code, the CAN app, the gateway service, the Qt dashboard | 0, 4, 6 | Everything on the gateway side. Phases 0 and 4 are small and use the same toolchain and Makefile style, and the CAN code grows into the gateway's CAN interface. |
+| `modbus` | The Modbus library (RTU + TCP, master + slave), with its own tests | 3 (library) | Two other repos use it: IO-Node runs it as a slave, the gateway as a master. It builds and tests entirely on your PC. It's your strongest resume piece, so it deserves its own README. |
+| `io-node` | The field device: kernel driver, device tree overlay, test utility, Modbus slave daemon, RT latency tester | 2, 3 (slave app), 5 (tester) | Everything that runs on the remote I/O module. The driver follows different rules from everything else (kernel C, Kbuild). The latency tester and the optional control loop measure this device's timing. |
+| `io-node-os` | Buildroot external tree + Yocto layer, including the PREEMPT_RT kernel config | 1, 5 (kernel side) | No application code. It pulls the other repos in as packages and builds the bootable image. |
+
+Repo names other than this one are placeholders. Rename them as you like.
+
+**How the pieces get pulled in:**
+- **On your PC:** the gateway and `io-node` include the Modbus library as a git submodule, a pinned link to another repo. We'll cover it when Phase 3 starts.
+- **On the board:** `io-node-os` has one Buildroot package / Yocto recipe per repo, each pointing at a tagged version of that repo.
+
+**When to create each repo:** at the start of its phase, not before. Copy `CLAUDE.md` into each new repo so the same mentor rules apply there.
+
+---
+
 ## Suggested pacing
 
 - **Total: roughly 4–6 months** at a sustainable side-project pace (5–8 hrs/week), faster if you can dedicate more time.

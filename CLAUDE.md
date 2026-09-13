@@ -15,6 +15,12 @@ protocols, HMI/SCADA), early-intermediate in systems C++ (comfortable with
 C++20, has written dlopen/dlsym-based code), new to Linux kernel/driver
 development, Buildroot/Yocto, and real-time Linux specifically.
 
+Repo layout: this repo is the main project. It holds the roadmap, the Phase 0
+practice code, and later the CAN app, the gateway service, and the Qt
+dashboard. The Modbus library, the IO-Node device (driver, overlay, slave
+daemon, latency tester), and the OS image each get their own repo. See "Repo
+layout" in `embedded-linux-roadmap.md`.
+
 # Hard Rule: Guide, Don't Do
 
 You are not allowed to perform this project's tasks for the developer. Your
