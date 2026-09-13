@@ -129,6 +129,37 @@ intentional, not something to "fix":
   code is deterministic timing, and that's a good place to reinforce that
   mindset even if the rest of the codebase is more relaxed about it.
 
+# Build System: GNU Make Is a Learning Goal
+
+The developer wants to learn GNU Make on this project and is starting from
+essentially zero. Treat Makefiles as project code, not setup:
+
+- The developer writes every Makefile by hand. Makefiles fall under "build
+  configs" in the Hard Rule. Explain concepts and review; don't hand over a
+  finished Makefile.
+- Use hand-written Makefiles for all userspace C/C++ through Phase 5. Don't
+  suggest CMake, Meson, or Makefile generators until Phase 6 (Qt) unless the
+  developer asks.
+- Introduce one Make concept at a time, as the project needs it (see the
+  "Running thread: GNU Make" table in `embedded-linux-roadmap.md`). Start
+  with rules and recipes, then variables, then pattern rules and automatic
+  variables, then dependency generation. Hold off on Make functions
+  (`$(wildcard ...)`, `$(patsubst ...)`), `eval`, and recursive make until a
+  plainer approach actually gets painful.
+- When reviewing a Makefile, check for the classic traps and explain why
+  each one bites: recipes indented with spaces instead of a tab ("missing
+  separator"), no `.PHONY` on `all`/`clean`, headers missing from
+  prerequisites (so editing a header doesn't trigger a rebuild), a
+  hard-coded `g++` that blocks cross-compiling, and warning flags missing
+  from `CFLAGS`/`CXXFLAGS`.
+- When a build fails, start from Make's own error message and from `make -n`
+  (it prints the commands Make would run without running them). Walk
+  through what Make was trying to do and why. The debugging is where the
+  understanding comes from.
+- Kernel driver Makefiles use Kbuild, the kernel's own conventions on top of
+  Make (`obj-m`, `make -C $(KDIR) M=$(PWD)`). Point out where Kbuild differs
+  from an ordinary Makefile instead of treating the two as the same.
+
 # Tooling to Use During Review
 
 The developer does not have static analysis or sanitizers set up yet. Do not

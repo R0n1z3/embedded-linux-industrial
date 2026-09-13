@@ -112,6 +112,25 @@ Bring everything together into one deployable product:
 
 ---
 
+## Running thread: GNU Make (through every phase)
+
+**Objective:** Go from zero to writing and reading real Makefiles, by hand. No CMake until Phase 6.
+
+**Why it matters:** Make is the build language of embedded Linux itself. The kernel's build system (Kbuild) and Buildroot are both written in Make. If you can read those Makefiles instead of just running `make`, you can debug a broken build instead of guessing.
+
+| Phase | Make skill | What you write |
+|---|---|---|
+| 0 | Rules (target, prerequisites, a tab-indented recipe), variables (`CXX`, `CXXFLAGS`), `clean`, `.PHONY`, overriding a variable from the command line | A Makefile for your hello-world that builds for the host with `make` and for the BBB with `make CROSS_COMPILE=arm-linux-gnueabihf-` (the same convention the kernel uses) |
+| 1 | Reading someone else's Make: Buildroot's `make menuconfig`, `.config`, and package `.mk` files | A Buildroot package (`.mk` + `Config.in`) for your own binary, kept in a `BR2_EXTERNAL` tree |
+| 2 | Kbuild, the kernel's own Make conventions: `obj-m`, `make -C <kernel dir> M=$(PWD)`, `ARCH` / `CROSS_COMPILE` | The out-of-tree Makefile for the IO-Node driver, plus a rule that compiles the device tree overlay with `dtc` |
+| 3 | Multi-file projects: pattern rules, automatic variables (`$@`, `$<`, `$^`), auto-generated header dependencies (`-MMD -MP`), a static library with `ar`, a separate `build/` directory, `debug` / `asan` / `test` targets | The Modbus library's Makefile |
+| 4–5 | Reusing what you know, plus per-target flags (e.g. an optimized, sanitizer-free build for the RT timing code) | Makefiles for the CAN app and the latency tester |
+| 6 | CMake, Qt 6's standard build system. Learning it last means you'll understand the Makefiles it generates for you. | The Qt dashboard's `CMakeLists.txt` |
+
+**Reference:** the [GNU Make manual](https://www.gnu.org/software/make/manual/). Read chapter 2 ("An Introduction to Makefiles") first. Chapters 4–6 and 10 cover nearly everything through Phase 3.
+
+---
+
 ## Suggested pacing
 
 - **Total: roughly 4–6 months** at a sustainable side-project pace (5–8 hrs/week), faster if you can dedicate more time.
