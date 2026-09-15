@@ -13,13 +13,16 @@ ARM_BINARIES = build/app-arm build/app-cpp-arm
 MK_BLDFLDR = mkdir -p build
 
 #COMMANDS
-.PHONY : clean all host arm
+.PHONY : clean all host arm tidy
 
 all : $(HOST_BINARIES) $(ARM_BINARIES)
 
 host : $(HOST_BINARIES)
 
 arm : $(ARM_BINARIES)
+
+tidy : src/main.cpp
+	clang-tidy src/main.cpp -- $(CXXFLAGS)
 
 build/app : src/main.c
 	$(MK_BLDFLDR)

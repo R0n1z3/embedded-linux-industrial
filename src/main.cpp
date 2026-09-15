@@ -3,14 +3,23 @@
 #include <string>
 
 int main() {
-
-    std::string name = "Billy";
-    int age = 31;
     
-    std::string formatted_string = std::format("Hello my name is {}! I'm {} years old.", name, age);
-
-    std::cout << formatted_string << '\n'; 
+    try {
+        
+        std::string name = "Billy";
+        const int age = 31;
+        
+        std::string formatted_string = std::format("Hello my name is {}! I'm {} years old.", name, age);
+        
+        std::cout << formatted_string << '\n'; 
+        
+        return 0;
+        
+    }
+    catch (const std::exception& e) {
+        std::cerr << e.what() << '\n';
+        return 1;
+    }
     
-    return 0;
-
 }
+
