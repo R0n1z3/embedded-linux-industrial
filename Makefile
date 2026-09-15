@@ -1,26 +1,42 @@
 #VARS
-cc := gcc
-CROSS_COMPILE ?=
+CC := gcc
+CXX := g++
+CROSS_COMPILE ?= arm-linux-gnueabihf-
+GCC_ARM = gcc
+G++_ARM = g++
 CFLAGS := -Wall -Wextra -Wpedantic
 ARMFLAGS = -Wall -Wextra -Wpedantic
-OUTPUT := build/app
-OBJECTS = build/app build/app-arm
+CXXFLAGS = -Wall -Wextra -Wpedantic -std=c++20
+CXXARMFLAGS = -Wall -Wextra -Wpedantic -std=c++20
+HOST_BINARIES = build/app  build/app-cpp
+ARM_BINARIES = build/app-arm build/app-cpp-arm
 MK_BLDFLDR = mkdir -p build
 
-#IF CROSS_COMPILE is declared by the user then it builds the arm binary
-ifneq ($(CROSS_COMPILE),)
-  cc := $(CROSS_COMPILE)gcc
-  OUTPUT := build/app-arm
-  CFLAGS := $(ARMFLAGS)
-
-endif
-
 #COMMANDS
-$(OUTPUT) : src/main.c
+.PHONY : clean all host arm
+
+all : $(HOST_BINARIES) $(ARM_BINARIES)
+
+host : $(HOST_BINARIES)
+
+arm : $(ARM_BINARIES)
+
+build/app : src/main.c
 	$(MK_BLDFLDR)
-	$(cc) $(CFLAGS) src/main.c -o $(OUTPUT)
+	$(CC) $(CFLAGS) src/main.c -o build/app
+
+build/app-arm : src/main.c
+	$(MK_BLDFLDR)
+	$(CROSS_COMPILE)$(GCC_ARM) $(ARMFLAGS) src/main.c -o build/app-arm
+
+build/app-cpp : src/main.cpp
+	$(MK_BLDFLDR)
+	$(CXX) $(CXXFLAGS) src/main.cpp -o build/app-cpp
+
+build/app-cpp-arm : src/main.cpp
+	$(MK_BLDFLDR)
+	$(CROSS_COMPILE)$(G++_ARM) $(CXXARMFLAGS) src/main.cpp -o build/app-cpp-arm
 
 
-.PHONY : clean
 clean :
-		rm -f $(OBJECTS)
+		rm -f $(HOST_BINARIES) $(ARM_BINARIES)
